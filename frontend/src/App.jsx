@@ -175,6 +175,27 @@ function Login({ onLogin }) {
 
 function Dashboard({ user, onLogout }) {
   const [activePage, setActivePage] = useState("Dashboard");
+  const [lowStockAlerts, setLowStockAlerts] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    const loadLowStockAlerts = () => {
+      fetch(`${API}/api/low-stock`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setLowStockAlerts(data.alerts || []);
+          }
+        })
+        .catch(() => {});
+    };
+
+    loadLowStockAlerts();
+
+    const interval = setInterval(loadLowStockAlerts, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (
@@ -250,9 +271,70 @@ function Dashboard({ user, onLogout }) {
           </div>
 
           <div className="top-actions">
-            <button className="icon-button">
-              <Bell size={18} />
-            </button>
+            <div className="notification-wrapper">
+              <button
+                className={`icon-button ${
+                  lowStockAlerts.length > 0 ? "has-notifications" : ""
+                }`}
+                onClick={() => setShowNotifications((value) => !value)}
+                aria-label="Notifications"
+              >
+                <Bell size={18} />
+
+                {lowStockAlerts.length > 0 && (
+                  <span className="notification-count">
+                    {lowStockAlerts.length > 99 ? "99+" : lowStockAlerts.length}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <div className="notification-panel">
+                  <div className="notification-panel-header">
+                    <div>
+                      <strong>Notifications</strong>
+                      <span>
+                        {lowStockAlerts.length} low-stock alert
+                        {lowStockAlerts.length !== 1 ? "s" : ""}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="notification-list">
+                    {lowStockAlerts.length === 0 ? (
+                      <div className="notification-empty">
+                        <Bell size={18} />
+                        <span>No low-stock alerts.</span>
+                      </div>
+                    ) : (
+                      lowStockAlerts.map((alert) => (
+                        <div
+                          className="notification-item"
+                          key={alert.inventory_id}
+                        >
+                          <div className="notification-item-icon">
+                            <AlertTriangle size={16} />
+                          </div>
+
+                          <div className="notification-item-content">
+                            <strong>{alert.product_name}</strong>
+
+                            <span>
+                              {alert.sku} · {alert.warehouse_name}
+                            </span>
+
+                            <small>
+                              {alert.available_stock} units remaining ·
+                              Minimum {alert.minimum_stock}
+                            </small>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="user-chip">
               <div className="avatar">
