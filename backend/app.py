@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
 
@@ -440,6 +440,186 @@ def stock_out():
         return {
             "success": False,
             "message": "Stock-out failed",
+            "error": str(e)
+        }, 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if conn:
+            conn.close()
+
+@app.route("/api/movements", methods=["GET"])
+def get_movements():
+    conn = None
+    cursor = None
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                sm.movement_id,
+                sm.product_id,
+                p.product_name,
+                p.sku,
+                sm.warehouse_id,
+                w.warehouse_name,
+                sm.user_id,
+                u.full_name,
+                sm.movement_type,
+                sm.quantity,
+                sm.reference_number,
+                sm.reason,
+                sm.status,
+                sm.movement_date
+            FROM stock_movements sm
+            JOIN products p ON sm.product_id = p.product_id
+            JOIN warehouses w ON sm.warehouse_id = w.warehouse_id
+            JOIN users u ON sm.user_id = u.user_id
+            ORDER BY sm.movement_date DESC, sm.movement_id DESC
+        """)
+
+        movements = cursor.fetchall()
+
+        return {
+            "success": True,
+            "count": len(movements),
+            "movements": movements
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": "Could not load stock movements.",
+            "error": str(e)
+        }, 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if conn:
+            conn.close()
+
+
+@app.route("/api/warehouse-values", methods=["GET"])
+def get_warehouse_values():
+    conn = None
+    cursor = None
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                w.warehouse_id,
+                w.warehouse_name,
+                w.location,
+                w.bin_code,
+                w.capacity,
+                COALESCE(SUM(i.available_stock + i.reserved_stock), 0) AS total_stock,
+                COALESCE(SUM(
+                    (i.available_stock + i.reserved_stock) * p.price
+                ), 0) AS inventory_value,
+                COUNT(DISTINCT i.product_id) AS product_count
+            FROM warehouses w
+            LEFT JOIN inventory i
+                ON w.warehouse_id = i.warehouse_id
+            LEFT JOIN products p
+                ON i.product_id = p.product_id
+            GROUP BY
+                w.warehouse_id,
+                w.warehouse_name,
+                w.location,
+                w.bin_code,
+                w.capacity
+            ORDER BY w.warehouse_id
+        """)
+
+        warehouses = cursor.fetchall()
+
+        for warehouse in warehouses:
+            warehouse["inventory_value"] = float(
+                warehouse["inventory_value"] or 0
+            )
+            warehouse["total_stock"] = int(
+                warehouse["total_stock"] or 0
+            )
+            warehouse["product_count"] = int(
+                warehouse["product_count"] or 0
+            )
+
+        return jsonify({
+            "success": True,
+            "count": len(warehouses),
+            "warehouses": warehouses
+        })
+
+    except Exception as e:
+        print("WAREHOUSE VALUES ERROR:", e)
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+@app.route("/api/suppliers", methods=["GET"])
+def get_suppliers():
+    conn = None
+    cursor = None
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                s.supplier_id,
+                s.supplier_name,
+                s.contact_person,
+                s.phone,
+                s.email,
+                s.address,
+                s.lead_time_days,
+                s.last_contact_date,
+                COUNT(p.product_id) AS product_count
+            FROM suppliers s
+            LEFT JOIN products p
+                ON s.supplier_id = p.supplier_id
+            GROUP BY
+                s.supplier_id,
+                s.supplier_name,
+                s.contact_person,
+                s.phone,
+                s.email,
+                s.address,
+                s.lead_time_days,
+                s.last_contact_date
+            ORDER BY s.supplier_id
+        """)
+
+        suppliers = cursor.fetchall()
+
+        return {
+            "success": True,
+            "count": len(suppliers),
+            "suppliers": suppliers
+        }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": "Could not load suppliers.",
             "error": str(e)
         }, 500
 

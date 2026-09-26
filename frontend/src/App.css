@@ -1627,3 +1627,615 @@ form label {
   }
 }
 
+
+/* =========================
+   MOVEMENTS PAGE
+   ========================= */
+
+.movements-page {
+  width: 100%;
+}
+
+.movements-page .module-header {
+  margin-bottom: 24px;
+}
+
+.movements-table-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5dfd2;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(31, 21, 12, 0.06);
+  overflow: hidden;
+}
+
+.movements-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.movements-table {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.movements-table th {
+  padding: 15px 16px;
+  background: #1F150C;
+  color: #E1DCC9;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.movements-table td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #eee9df;
+  color: #412D15;
+  white-space: nowrap;
+}
+
+.movements-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.movements-table tbody tr:hover {
+  background: #faf8f2;
+}
+
+.movements-table td strong {
+  color: #000000;
+  font-weight: 700;
+}
+
+.movement-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.movement-in {
+  background: #e8eee4;
+  color: #294329;
+}
+
+.movement-out {
+  background: #eee4da;
+  color: #633b25;
+}
+
+.movement-status {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #f1eee7;
+  color: #412D15;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.movements-page .stock-operation-badge {
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .movements-table-card {
+    border-radius: 12px;
+  }
+
+  .movements-table {
+    min-width: 1000px;
+  }
+
+  .movements-table th,
+  .movements-table td {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .movements-page .module-header {
+    align-items: flex-start;
+  }
+
+  .movements-page .stock-operation-badge {
+    display: none;
+  }
+
+  .movements-table {
+    min-width: 950px;
+  }
+}
+
+.movements-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-top: 1px solid #eee9df;
+  background: #faf8f2;
+}
+
+.movements-range {
+  color: #6b6258;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.movements-pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.movements-pagination button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #d9d1c3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #412D15;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.movements-pagination button:hover:not(:disabled) {
+  background: #f1eee7;
+}
+
+.movements-pagination button.active {
+  background: #1F150C;
+  color: #E1DCC9;
+  border-color: #1F150C;
+}
+
+.movements-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .movements-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .movements-pagination {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+}
+
+/* =========================
+   SUPPLIERS PAGE
+   ========================= */
+
+.suppliers-page {
+  width: 100%;
+}
+
+.suppliers-page .module-header {
+  margin-bottom: 20px;
+}
+
+.suppliers-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.suppliers-search {
+  width: min(420px, 100%);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  background: #ffffff;
+  border: 1px solid #ddd5c8;
+  border-radius: 10px;
+  color: #756b5f;
+  box-shadow: 0 4px 14px rgba(31, 21, 12, 0.04);
+}
+
+.suppliers-search:focus-within {
+  border-color: #8b7558;
+  box-shadow: 0 0 0 3px rgba(139, 117, 88, 0.10);
+}
+
+.suppliers-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1F150C;
+  font-size: 13px;
+}
+
+.suppliers-search input::placeholder {
+  color: #9b9388;
+}
+
+.suppliers-table-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5dfd2;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(31, 21, 12, 0.06);
+}
+
+.suppliers-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.suppliers-table {
+  width: 100%;
+  min-width: 1200px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.suppliers-table th {
+  padding: 15px 16px;
+  background: #1F150C;
+  color: #E1DCC9;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.suppliers-table td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #eee9df;
+  color: #5b5044;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.suppliers-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.suppliers-table tbody tr:hover {
+  background: #faf8f2;
+}
+
+.supplier-name {
+  color: #000000;
+  font-weight: 700;
+}
+
+.supplier-lead-time {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #f1eee7;
+  color: #412D15;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.supplier-product-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: #eee8dc;
+  color: #412D15;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.suppliers-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-top: 1px solid #eee9df;
+  background: #faf8f2;
+}
+
+.suppliers-range {
+  color: #6b6258;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.suppliers-pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.suppliers-pagination button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #d9d1c3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #412D15;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.suppliers-pagination button:hover:not(:disabled) {
+  background: #f1eee7;
+}
+
+.suppliers-pagination button.active {
+  background: #1F150C;
+  color: #E1DCC9;
+  border-color: #1F150C;
+}
+
+.suppliers-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .suppliers-toolbar {
+    width: 100%;
+  }
+
+  .suppliers-search {
+    width: 100%;
+  }
+
+  .suppliers-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .suppliers-pagination {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .suppliers-table {
+    min-width: 1100px;
+  }
+}
+
+/* =========================
+   WAREHOUSES PAGE
+   ========================= */
+
+.warehouses-page {
+  width: 100%;
+}
+
+.warehouses-page .module-header {
+  margin-bottom: 20px;
+}
+
+.warehouses-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.warehouses-search {
+  width: min(420px, 100%);
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  background: #ffffff;
+  border: 1px solid #ddd5c8;
+  border-radius: 10px;
+  color: #756b5f;
+  box-shadow: 0 4px 14px rgba(31, 21, 12, 0.04);
+}
+
+.warehouses-search:focus-within {
+  border-color: #8b7558;
+  box-shadow: 0 0 0 3px rgba(139, 117, 88, 0.10);
+}
+
+.warehouses-search input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1F150C;
+  font-size: 13px;
+}
+
+.warehouses-search input::placeholder {
+  color: #9b9388;
+}
+
+.warehouses-table-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5dfd2;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(31, 21, 12, 0.06);
+}
+
+.warehouses-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.warehouses-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.warehouses-table th {
+  padding: 15px 16px;
+  background: #1F150C;
+  color: #E1DCC9;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.warehouses-table td {
+  padding: 17px 16px;
+  border-bottom: 1px solid #eee9df;
+  color: #5b5044;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.warehouses-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.warehouses-table tbody tr:hover {
+  background: #faf8f2;
+}
+
+.warehouse-name {
+  color: #000000;
+  font-weight: 700;
+}
+
+.warehouse-bin {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f1eee7;
+  color: #412D15;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.warehouse-capacity {
+  color: #412D15;
+  font-weight: 700;
+}
+
+.warehouses-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  border-top: 1px solid #eee9df;
+  background: #faf8f2;
+}
+
+.warehouses-range {
+  color: #6b6258;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.warehouses-pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.warehouses-pagination button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #d9d1c3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #412D15;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.warehouses-pagination button:hover:not(:disabled) {
+  background: #f1eee7;
+}
+
+.warehouses-pagination button.active {
+  background: #1F150C;
+  color: #E1DCC9;
+  border-color: #1F150C;
+}
+
+.warehouses-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.warehouses-table .empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  color: #8b8175;
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .warehouses-search {
+    width: 100%;
+  }
+
+  .warehouses-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .warehouses-pagination {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+}
+
+/* Warehouse inventory value */
+
+.warehouse-value {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 11px;
+  border-radius: 8px;
+  background: #eee8dc;
+  color: #1F150C;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .warehouses-table {
+    min-width: 1050px;
+  }
+}
