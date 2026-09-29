@@ -51,6 +51,7 @@ function Login({ onLogin }) {
 
       if (data.success) {
         localStorage.setItem("warehouseiq_user", JSON.stringify(data.user));
+        window.history.replaceState(null, "", window.location.href);
         onLogin(data.user);
       } else {
         setMessage(data.message || "Invalid username or password.");
@@ -2285,8 +2286,24 @@ function App() {
     savedUser ? JSON.parse(savedUser) : null
   );
 
+  useEffect(() => {
+    if (!user) return;
+
+    const preventBackToLogin = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", preventBackToLogin);
+
+    return () => {
+      window.removeEventListener("popstate", preventBackToLogin);
+    };
+  }, [user]);
+
   const handleLogout = () => {
     localStorage.removeItem("warehouseiq_user");
+    window.history.replaceState(null, "", window.location.href);
     setUser(null);
   };
 
