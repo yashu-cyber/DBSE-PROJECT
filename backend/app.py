@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from auth.jwt_utils import create_token
+from auth.jwt_required import token_required
 import mysql.connector
 
 app = Flask(__name__)
@@ -62,10 +64,17 @@ def login():
                 "message": "Invalid username or password"
             }, 401
 
+        token = create_token(
+            user["user_id"],
+            user["username"],
+            user["role"]
+        )
+
         return {
             "success": True,
             "message": "Login successful",
-            "user": user
+            "user": user,
+            "token": token
         }
 
     except Exception as e:
@@ -79,6 +88,7 @@ def login():
 # ---------------- DATABASE TEST ----------------
 
 @app.route("/api/test-db")
+@token_required
 def test_db():
     try:
         conn = get_db_connection()
