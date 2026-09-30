@@ -211,8 +211,12 @@ function Dashboard({ user, onLogout }) {
     { name: "Stock In", icon: ArrowDownToLine },
     { name: "Stock Out", icon: ArrowUpFromLine },
     { name: "Movements", icon: BarChart3 },
-    { name: "Suppliers", icon: Truck },
-    { name: "Warehouses", icon: Building2 },
+    ...(user.role === "Admin"
+      ? [
+          { name: "Suppliers", icon: Truck },
+          { name: "Warehouses", icon: Building2 },
+        ]
+      : []),
   ];
 
   return (
