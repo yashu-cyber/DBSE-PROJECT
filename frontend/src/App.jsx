@@ -2064,7 +2064,7 @@ function WarehousesPage() {
         }
 
         const valueMap = new Map(
-          (valueData.warehouses || []).map((warehouse) => [
+          (valueData.warehouse_values || []).map((warehouse) => [
             warehouse.warehouse_id,
             warehouse
           ])
@@ -2073,7 +2073,7 @@ function WarehousesPage() {
         const merged = (warehouseData.warehouses || []).map((warehouse) => ({
           ...warehouse,
           inventory_value:
-            valueMap.get(warehouse.warehouse_id)?.inventory_value || 0,
+            valueMap.get(warehouse.warehouse_id)?.total_value || 0,
           total_stock:
             valueMap.get(warehouse.warehouse_id)?.total_stock || 0,
           product_count:
