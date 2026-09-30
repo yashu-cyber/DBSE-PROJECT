@@ -21,6 +21,11 @@ import {
 } from "lucide-react";
 import "./App.css";
 
+const authHeaders = () => {
+  const token = sessionStorage.getItem("warehouseiq_token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 const API = "http://127.0.0.1:5050";
 
 function Login({ onLogin }) {
@@ -50,7 +55,8 @@ function Login({ onLogin }) {
       const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem("warehouseiq_user", JSON.stringify(data.user));
+        sessionStorage.setItem("warehouseiq_user", JSON.stringify(data.user));
+        sessionStorage.setItem("warehouseiq_token", data.token);
         window.history.replaceState(null, "", window.location.href);
         onLogin(data.user);
       } else {
@@ -181,7 +187,7 @@ function Dashboard({ user, onLogout }) {
 
   useEffect(() => {
     const loadLowStockAlerts = () => {
-      fetch(`${API}/api/low-stock`)
+      fetch(`${API}/api/low-stock`, { headers: authHeaders() })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
@@ -197,15 +203,6 @@ function Dashboard({ user, onLogout }) {
 
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (
-      user?.role !== "Admin" &&
-      (activePage === "Suppliers" || activePage === "Warehouses")
-    ) {
-      setActivePage("Dashboard");
-    }
-  }, [user, activePage]);
 
   const navigation = [
     { name: "Dashboard", icon: LayoutDashboard },
@@ -526,7 +523,7 @@ function ProductsPage() {
     try {
       setLoading(true);
 
-      const response = await fetch(`${API}/api/products`);
+      const response = await fetch(`${API}/api/products`, { headers: authHeaders() });
       const data = await response.json();
 
       if (data.success) {
@@ -765,7 +762,7 @@ function InventoryPage() {
   const rowsPerPage = 10;
 
   useEffect(() => {
-    fetch(`${API}/api/inventory`)
+    fetch(`${API}/api/inventory`, { headers: authHeaders() })
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -1106,8 +1103,8 @@ function StockInPage({ user }) {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/api/products`).then((res) => res.json()),
-      fetch(`${API}/api/warehouses`).then((res) => res.json()),
+      fetch(`${API}/api/products`, { headers: authHeaders() }).then((res) => res.json()),
+      fetch(`${API}/api/warehouses`, { headers: authHeaders() }).then((res) => res.json()),
     ])
       .then(([productData, warehouseData]) => {
         if (productData.success) {
@@ -1144,6 +1141,7 @@ function StockInPage({ user }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...authHeaders(),
         },
         body: JSON.stringify({
           product_id: Number(productId),
@@ -1363,8 +1361,8 @@ function StockOutPage({ user }) {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/api/products`).then((res) => res.json()),
-      fetch(`${API}/api/warehouses`).then((res) => res.json()),
+      fetch(`${API}/api/products`, { headers: authHeaders() }).then((res) => res.json()),
+      fetch(`${API}/api/warehouses`, { headers: authHeaders() }).then((res) => res.json()),
     ])
       .then(([productData, warehouseData]) => {
         if (productData.success) {
@@ -1401,6 +1399,7 @@ function StockOutPage({ user }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...authHeaders(),
         },
         body: JSON.stringify({
           product_id: Number(productId),
@@ -1611,7 +1610,7 @@ function MovementsPage() {
   const rowsPerPage = 10;
 
   useEffect(() => {
-    fetch(`${API}/api/movements`)
+    fetch(`${API}/api/movements`, { headers: authHeaders() })
       .then((res) => res.json())
       .then((data) => {
         if (!data.success) {
@@ -1816,7 +1815,7 @@ function SuppliersPage() {
   const rowsPerPage = 6;
 
   useEffect(() => {
-    fetch(`${API}/api/suppliers`)
+    fetch(`${API}/api/suppliers`, { headers: authHeaders() })
       .then((res) => res.json())
       .then((data) => {
         if (!data.success) {
@@ -2048,8 +2047,8 @@ function WarehousesPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/api/warehouses`).then((res) => res.json()),
-      fetch(`${API}/api/warehouse-values`).then((res) => res.json())
+      fetch(`${API}/api/warehouses`, { headers: authHeaders() }).then((res) => res.json()),
+      fetch(`${API}/api/warehouse-values`, { headers: authHeaders() }).then((res) => res.json())
     ])
       .then(([warehouseData, valueData]) => {
         if (!warehouseData.success) {
@@ -2280,7 +2279,7 @@ function ComingSoonPage({ activePage }) {
 }
 
 function App() {
-  const savedUser = localStorage.getItem("warehouseiq_user");
+  const savedUser = sessionStorage.getItem("warehouseiq_user");
 
   const [user, setUser] = useState(
     savedUser ? JSON.parse(savedUser) : null

@@ -1,0 +1,95 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: warehouseiq-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: warehouseiq_root
+      MYSQL_DATABASE: warehouseiq_final
+    ports:
+      - "3307:3306"
+    volumes:
+      - warehouseiq_mysql_data:/var/lib/mysql
+      - ./database/WAREHOUSEIQFINAL.sql:/docker-entrypoint-initdb.d/WAREHOUSEIQFINAL.sql:ro
+
+  auth-service:
+    build:
+      context: ./backend
+      dockerfile: services/auth_service/Dockerfile
+    container_name: warehouseiq-auth
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: warehouseiq-docker-secret-change-me
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: warehouseiq_root
+      DB_NAME: warehouseiq_final
+    depends_on:
+      - mysql
+    ports:
+      - "5001:5001"
+
+  inventory-service:
+    build:
+      context: ./backend
+      dockerfile: services/inventory_service/Dockerfile
+    container_name: warehouseiq-inventory
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: warehouseiq_root
+      DB_NAME: warehouseiq_final
+    depends_on:
+      - mysql
+    ports:
+      - "5002:5002"
+
+  admin-service:
+    build:
+      context: ./backend
+      dockerfile: services/admin_service/Dockerfile
+    container_name: warehouseiq-admin
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: warehouseiq_root
+      DB_NAME: warehouseiq_final
+    depends_on:
+      - mysql
+    ports:
+      - "5003:5003"
+
+  gateway:
+    build:
+      context: ./backend
+      dockerfile: gateway/Dockerfile
+    container_name: warehouseiq-gateway
+    restart: unless-stopped
+    environment:
+      AUTH_SERVICE: http://auth-service:5001
+      INVENTORY_SERVICE: http://inventory-service:5002
+      ADMIN_SERVICE: http://admin-service:5003
+      JWT_SECRET: warehouseiq-docker-secret-change-me
+    depends_on:
+      - auth-service
+      - inventory-service
+      - admin-service
+    ports:
+      - "5050:5050"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: warehouseiq-frontend
+    restart: unless-stopped
+    depends_on:
+      - gateway
+    ports:
+      - "5173:5173"
+
+volumes:
+  warehouseiq_mysql_data:

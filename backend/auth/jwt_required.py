@@ -36,3 +36,18 @@ def token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+
+
+def admin_required(f):
+    @wraps(f)
+    @token_required
+    def decorated(*args, **kwargs):
+        if g.current_user.get("role") != "Admin":
+            return jsonify({
+                "success": False,
+                "message": "Admin access required"
+            }), 403
+
+        return f(*args, **kwargs)
+
+    return decorated
